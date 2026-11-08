@@ -1,0 +1,3518 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="catppuccin">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>C# Practice — тесты по теории</title>
+
+    <!-- Inter + JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* ============================================================
+           TOKENS
+           ============================================================ */
+        :root {
+            --radius-lg: 18px;
+            --radius-md: 14px;
+            --radius-sm: 9px;
+
+            --fs-ui: 14px;
+            --fs-base: 15px;
+
+            --font-main: 'Inter', system-ui, -apple-system, sans-serif;
+            --font-code: 'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace;
+        }
+
+        /* ============================================================
+           THEMES
+           ============================================================ */
+
+        :root[data-theme="gruvbox"] {
+            --bg:#282828; --bg2:#1D2021;
+            --panel:#32302F; --panel2:#3C3836;
+            --border:#504945;
+            --text:#EBDBB2; --text-strong:#FBF1C7; --muted:#A89984;
+            --accent:#83A598; --accent-soft:rgba(131,165,152,.16);
+            --green:#B8BB26; --yellow:#FABD2F; --red:#FB4934;
+            --glow1:rgba(131,165,152,.10); --glow2:rgba(250,189,47,.05);
+            --opt-bg:rgba(29,32,33,.72);
+            --code-bg:#1D2021;
+            --shadow:0 8px 30px -10px rgba(0,0,0,.8);
+        }
+
+        /* ---- Everforest Dark Medium ---- */
+        :root[data-theme="everforest"] {
+            --bg: #2D353B;
+            --panel: #343F44;
+            --panel-alt: #3D484D;
+            --panel-hover: #475258;
+
+            --border: #475258;
+            --border-hover: #A7C080;
+
+            --text: #D3C6AA;
+            --text-strong: #E4DCC2;
+            --muted: #859289;
+
+            --accent: #A7C080;
+            --accent-soft: rgba(167, 192, 128, .16);
+
+            --green: #A7C080;
+            --yellow: #DBBC7F;
+            --red: #E67E80;
+
+            --glow1: rgba(167, 192, 128, .10);
+            --glow2: rgba(219, 188, 127, .05);
+
+            --hl-comment: #859289;
+            --hl-string: #A7C080;
+            --hl-char: #E69875;
+            --hl-preproc: #83C092;
+
+            --hl-keyword: #E67E80;
+            --hl-type: #D3C6AA;
+            --hl-number: #D699B6;
+            --hl-func: #A7C080;
+
+            --code-block-bg: #272E33;
+            --table-header: #3D484D;
+
+            --shadow: 0 4px 20px -8px rgba(0, 0, 0, .8);
+            --shadow-hover: 0 8px 30px -8px rgba(0, 0, 0, .95);
+
+            --yellow-dim: #8C7851;
+            --reveal-hover: rgba(219, 188, 127, .08);
+
+            --green-dim: #52684A;
+            --done-hover: rgba(167, 192, 128, .08);
+        }
+
+        :root[data-theme="catppuccin"] {
+            --bg:#1e1e2e; --bg2:#11111b;
+            --panel:#181825; --panel2:#313244;
+            --border:#45475a;
+            --text:#bac2de; --text-strong:#cdd6f4; --muted:#a6adc8;
+            --accent:#89b4fa; --accent-soft:rgba(137,180,250,.15);
+            --green:#a6e3a1; --yellow:#f9e2af; --red:#f38ba8;
+            --glow1:rgba(137,180,250,.08); --glow2:rgba(166,227,161,.05);
+            --opt-bg:rgba(17,17,27,.72);
+            --code-bg:#11111b;
+            --shadow:0 8px 28px -10px rgba(0,0,0,.75);
+        }
+
+        :root[data-theme="kanagawa"] {
+            --bg:#1F1F28; --bg2:#16161D;
+            --panel:#2A2A37; --panel2:#363646;
+            --border:#54546D;
+            --text:#DCD7BA; --text-strong:#F2E9DE; --muted:#957FB8;
+            --accent:#7FB4CA; --accent-soft:rgba(127,180,202,.15);
+            --green:#98BB6C; --yellow:#E6C384; --red:#E82424;
+            --glow1:rgba(126,156,216,.07); --glow2:rgba(152,187,108,.05);
+            --opt-bg:rgba(22,22,29,.72);
+            --code-bg:#16161D;
+            --shadow:0 8px 28px -10px rgba(0,0,0,.68);
+        }
+
+        :root[data-theme="nord"] {
+            --bg:#2E3440; --bg2:#292E39;
+            --panel:#3B4252; --panel2:#434C5E;
+            --border:#4C566A;
+            --text:#E5E9F0; --text-strong:#ECEFF4; --muted:#8FA1B3;
+            --accent:#88C0D0; --accent-soft:rgba(136,192,208,.15);
+            --green:#A3BE8C; --yellow:#EBCB8B; --red:#BF616A;
+            --glow1:rgba(94,129,172,.15); --glow2:rgba(163,190,140,.08);
+            --opt-bg:rgba(41,46,57,.72);
+            --code-bg:#292E39;
+            --shadow:0 8px 28px -10px rgba(0,0,0,.6);
+        }
+
+        :root[data-theme="dracula"] {
+            --bg:#282A36; --bg2:#21222C;
+            --panel:#343746; --panel2:#44475A;
+            --border:#50536B;
+            --text:#F8F8F2; --text-strong:#FFFFFF; --muted:#A9B1C6;
+            --accent:#BD93F9; --accent-soft:rgba(189,147,249,.15);
+            --green:#50FA7B; --yellow:#F1FA8C; --red:#FF5555;
+            --glow1:rgba(189,147,249,.10); --glow2:rgba(80,250,123,.06);
+            --opt-bg:rgba(33,34,44,.72);
+            --code-bg:#21222C;
+            --shadow:0 8px 28px -10px rgba(0,0,0,.72);
+        }
+
+        :root[data-theme="dark"] {
+            --bg:#0D1117; --bg2:#010409;
+            --panel:#161B22; --panel2:#1C222C;
+            --border:#30363D;
+            --text:#C9D1D9; --text-strong:#F0F6FC; --muted:#8B949E;
+            --accent:#58A6FF; --accent-soft:rgba(88,166,255,.15);
+            --green:#56D364; --yellow:#E3B341; --red:#F85149;
+            --glow1:rgba(88,166,255,.08); --glow2:rgba(86,211,100,.05);
+            --opt-bg:rgba(1,4,9,.72);
+            --code-bg:#010409;
+            --shadow:0 8px 30px -10px rgba(0,0,0,.85);
+        }
+
+        :root[data-theme="light"] {
+            --bg:#FFFFFF; --bg2:#F6F8FA;
+            --panel:#F6F8FA; --panel2:#EAEEF2;
+            --border:#D0D7DE;
+            --text:#1F2328; --text-strong:#0E1116; --muted:#59636E;
+            --accent:#0969DA; --accent-soft:rgba(9,105,218,.12);
+            --green:#1A7F37; --yellow:#9A6700; --red:#CF222E;
+            --glow1:rgba(9,105,218,.05); --glow2:rgba(26,127,55,.04);
+            --opt-bg:rgba(246,248,250,.9);
+            --code-bg:#F6F8FA;
+            --shadow:0 6px 24px -8px rgba(0,0,0,.13);
+        }
+
+
+        /* ============================================================
+           BASE
+           ============================================================ */
+
+        * {
+            box-sizing:border-box;
+            margin:0;
+            padding:0;
+        }
+
+        html {
+            scroll-behavior:smooth;
+        }
+
+        body {
+            min-height:100vh;
+            color:var(--text);
+
+            background:
+                    radial-gradient(
+                            ellipse at 10% 0%,
+                            var(--glow1),
+                            transparent 45%
+                    ),
+                    radial-gradient(
+                            ellipse at 100% 12%,
+                            var(--glow2),
+                            transparent 42%
+                    ),
+                    var(--bg);
+
+            font-family:var(--font-main);
+            font-size:var(--fs-ui);
+            line-height:1.55;
+
+            -webkit-font-smoothing:antialiased;
+            -moz-osx-font-smoothing:grayscale;
+            text-rendering:optimizeLegibility;
+
+            transition:
+                    background .3s ease,
+                    color .3s ease;
+        }
+
+        button,
+        input,
+        select {
+            font:inherit;
+        }
+
+        button {
+            cursor:pointer;
+            border:1px solid var(--border);
+            border-radius:var(--radius-sm);
+            background:var(--panel);
+            color:var(--text);
+            transition:
+                    background .16s,
+                    border-color .16s,
+                    color .16s,
+                    transform .16s,
+                    filter .16s;
+        }
+
+        button:hover:not(:disabled) {
+            background:var(--panel2);
+            border-color:var(--accent);
+            transform:translateY(-1px);
+        }
+
+        button:active:not(:disabled) {
+            transform:scale(.98);
+        }
+
+        button:disabled {
+            cursor:default;
+            opacity:.55;
+        }
+
+        button:focus-visible,
+        input:focus-visible,
+        select:focus-visible {
+            outline:2px solid var(--accent);
+            outline-offset:2px;
+        }
+
+        code {
+            font-family:var(--font-code);
+            background:var(--code-bg);
+            padding:2px 6px;
+            border-radius:5px;
+            font-size:.9em;
+            color:var(--accent);
+        }
+
+        ::-webkit-scrollbar {
+            width:8px;
+            height:8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background:transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background:var(--border);
+            border-radius:4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background:var(--muted);
+        }
+
+
+        /* ============================================================
+           WRAP
+           ============================================================ */
+
+        .wrap {
+            width:min(980px,100%);
+            margin:0 auto;
+            padding:36px 20px 80px;
+        }
+
+
+        /* ============================================================
+           SETTINGS
+           ============================================================ */
+
+        .settings {
+            position:fixed;
+            top:18px;
+            right:18px;
+            z-index:50;
+
+            display:flex;
+            align-items:center;
+            gap:9px;
+
+            padding:8px 10px;
+
+            border:1px solid var(--border);
+            border-radius:14px;
+
+            background:color-mix(
+                    in srgb,
+                    var(--panel) 92%,
+                    transparent
+            );
+
+            backdrop-filter:blur(14px);
+            box-shadow:var(--shadow);
+        }
+
+        .theme-select {
+            min-width:145px;
+            padding:7px 28px 7px 9px;
+
+            border:1px solid var(--border);
+            border-radius:8px;
+
+            background:var(--panel2);
+            color:var(--text);
+
+            font-size:12px;
+            cursor:pointer;
+            outline:none;
+        }
+
+        .theme-select:hover {
+            border-color:var(--accent);
+        }
+
+        .font-control {
+            display:flex;
+            align-items:center;
+            gap:8px;
+
+            color:var(--muted);
+            font-size:11px;
+            white-space:nowrap;
+        }
+
+        .font-slider {
+            width:85px;
+            height:4px;
+
+            -webkit-appearance:none;
+            appearance:none;
+
+            background:var(--border);
+            border-radius:2px;
+            outline:none;
+        }
+
+        .font-slider::-webkit-slider-thumb {
+            width:13px;
+            height:13px;
+
+            -webkit-appearance:none;
+            appearance:none;
+
+            border:none;
+            border-radius:50%;
+
+            background:var(--accent);
+            cursor:pointer;
+        }
+
+        .font-slider::-moz-range-thumb {
+            width:13px;
+            height:13px;
+
+            border:none;
+            border-radius:50%;
+
+            background:var(--accent);
+            cursor:pointer;
+        }
+
+
+        /* ============================================================
+           HERO
+           ============================================================ */
+
+        .hero {
+            text-align:center;
+            margin-bottom:38px;
+            padding-top:24px;
+        }
+
+        .eyebrow {
+            color:var(--accent);
+            text-transform:uppercase;
+            letter-spacing:.18em;
+            font-size:11px;
+            font-weight:800;
+            margin-bottom:10px;
+        }
+
+        .hero h1 {
+            color:var(--text-strong);
+            font-size:clamp(28px,5vw,44px);
+            letter-spacing:-.04em;
+            line-height:1.1;
+        }
+
+        .hero p {
+            color:var(--muted);
+            margin-top:13px;
+            max-width:600px;
+            margin-inline:auto;
+            font-size:var(--fs-base);
+        }
+
+
+        /* ============================================================
+           TOPIC GRID
+           ============================================================ */
+
+        .grid {
+            display:grid;
+            grid-template-columns:
+                repeat(auto-fill,minmax(210px,1fr));
+            gap:14px;
+        }
+
+        .topic {
+            width:100%;
+            padding:20px;
+
+            border-radius:18px;
+            background:var(--panel);
+
+            text-align:left;
+            box-shadow:var(--shadow);
+
+            position:relative;
+        }
+
+        .topic:hover {
+            border-color:var(--accent);
+            transform:translateY(-3px);
+        }
+
+        .t-icon {
+            font-size:26px;
+            display:block;
+            margin-bottom:10px;
+        }
+
+        .t-name {
+            color:var(--text-strong);
+            font-size:16px;
+            font-weight:700;
+            letter-spacing:-.02em;
+            margin-bottom:4px;
+        }
+
+        .t-count {
+            color:var(--muted);
+            font-size:12.5px;
+        }
+
+        .t-note {
+            margin-top:9px;
+            padding:4px 8px;
+
+            border-radius:7px;
+
+            font-size:10.5px;
+
+            background:
+                    color-mix(
+                            in srgb,
+                            var(--yellow) 14%,
+                            transparent
+                    );
+
+            color:var(--yellow);
+
+            display:inline-block;
+        }
+
+        .topic.special {
+            border-color:
+                    color-mix(
+                            in srgb,
+                            var(--yellow) 40%,
+                            var(--border)
+                    );
+        }
+
+
+        /* ============================================================
+           RANDOM PANEL
+           ============================================================ */
+
+        .rnd {
+            margin-top:26px;
+            padding:22px;
+
+            border:1px solid var(--border);
+            border-radius:18px;
+
+            background:var(--panel);
+            box-shadow:var(--shadow);
+        }
+
+        .rnd h2 {
+            color:var(--text-strong);
+            font-size:17px;
+            margin-bottom:5px;
+        }
+
+        .rnd .sub {
+            color:var(--muted);
+            font-size:13px;
+            margin-bottom:16px;
+        }
+
+        .rnd-row {
+            display:flex;
+            flex-wrap:wrap;
+            gap:13px;
+            align-items:center;
+        }
+
+        .cnt {
+            display:flex;
+            align-items:center;
+            gap:9px;
+        }
+
+        .cnt span {
+            color:var(--muted);
+            font-size:14px;
+        }
+
+        .cnt input {
+            width:76px;
+            padding:9px;
+
+            border:1px solid var(--border);
+            border-radius:10px;
+
+            background:var(--bg2);
+            color:var(--text);
+
+            text-align:center;
+            outline:none;
+        }
+
+        .chk {
+            display:flex;
+            align-items:center;
+            gap:8px;
+
+            color:var(--muted);
+            cursor:pointer;
+
+            font-size:13px;
+        }
+
+        .chk input {
+            width:17px;
+            height:17px;
+
+            accent-color:var(--accent);
+            cursor:pointer;
+        }
+
+        .primary {
+            background:var(--accent);
+            color:var(--bg);
+            border-color:var(--accent);
+
+            font-weight:700;
+            padding:11px 20px;
+        }
+
+        .primary:hover:not(:disabled) {
+            filter:brightness(1.1);
+        }
+
+
+        /* ============================================================
+           QUIZ HEADER
+           ============================================================ */
+
+        .qhead {
+            position:sticky;
+            top:0;
+            z-index:30;
+
+            padding:14px 0 12px;
+            margin-bottom:20px;
+
+            background:
+                    linear-gradient(
+                            to bottom,
+                            var(--bg) 70%,
+                            transparent
+                    );
+
+            backdrop-filter:blur(6px);
+        }
+
+        .qbar {
+            display:flex;
+            align-items:center;
+            gap:11px;
+            flex-wrap:wrap;
+            margin-bottom:11px;
+        }
+
+        .qbar .back {
+            padding:7px 13px;
+            font-size:13px;
+        }
+
+        .qbar .title {
+            color:var(--text-strong);
+            font-weight:700;
+            font-size:15.5px;
+            margin-right:auto;
+        }
+
+        .pill {
+            padding:5px 11px;
+            border-radius:20px;
+            font-size:12.5px;
+            font-weight:700;
+        }
+
+        .pill.ok {
+            background:
+                    color-mix(
+                            in srgb,
+                            var(--green) 15%,
+                            transparent
+                    );
+            color:var(--green);
+        }
+
+        .pill.bad {
+            background:
+                    color-mix(
+                            in srgb,
+                            var(--red) 15%,
+                            transparent
+                    );
+            color:var(--red);
+        }
+
+        .prog {
+            height:5px;
+            background:var(--panel2);
+            border-radius:4px;
+            overflow:hidden;
+        }
+
+        .prog-fill {
+            height:100%;
+
+            background:
+                    linear-gradient(
+                            90deg,
+                            var(--accent),
+                            var(--green)
+                    );
+
+            border-radius:4px;
+
+            transition:
+                    width .4s cubic-bezier(.4,0,.2,1);
+        }
+
+
+        /* ============================================================
+           QUESTION CARDS
+           ============================================================ */
+
+        .stack {
+            display:flex;
+            flex-direction:column;
+            gap:18px;
+        }
+
+        .card {
+            padding:24px;
+
+            border:1px solid var(--border);
+            border-radius:18px;
+
+            background:var(--panel);
+            box-shadow:var(--shadow);
+
+            animation:
+                    slideIn .45s cubic-bezier(.2,.8,.3,1);
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity:0;
+                transform:translateY(22px);
+            }
+
+            to {
+                opacity:1;
+                transform:none;
+            }
+        }
+
+        .card.done {
+            opacity:.92;
+        }
+
+        .card.done:hover {
+            opacity:1;
+        }
+
+        .q-top {
+            display:flex;
+            align-items:center;
+            gap:8px;
+            flex-wrap:wrap;
+            margin-bottom:9px;
+        }
+
+        .q-num {
+            color:var(--accent);
+            font-size:11px;
+            font-weight:800;
+            letter-spacing:.1em;
+            text-transform:uppercase;
+        }
+
+        .tag {
+            padding:3px 9px;
+            border-radius:7px;
+            font-size:10.5px;
+            font-weight:600;
+        }
+
+        .tag.multi {
+            background:
+                    color-mix(
+                            in srgb,
+                            var(--accent) 14%,
+                            transparent
+                    );
+            color:var(--accent);
+        }
+
+        .tag.src {
+            background:
+                    color-mix(
+                            in srgb,
+                            var(--yellow) 14%,
+                            transparent
+                    );
+            color:var(--yellow);
+        }
+
+        .tag.topic {
+            background:var(--panel2);
+            color:var(--muted);
+        }
+
+        .q-text {
+            color:var(--text-strong);
+            font-size:calc(var(--fs-base) + 3px);
+            font-weight:650;
+            letter-spacing:-.02em;
+            line-height:1.38;
+            margin-bottom:16px;
+        }
+
+        .opts {
+            display:flex;
+            flex-direction:column;
+            gap:9px;
+        }
+
+        .opt {
+            display:flex;
+            align-items:flex-start;
+            gap:12px;
+
+            padding:14px 16px;
+            text-align:left;
+
+            border-radius:13px;
+
+            background:var(--opt-bg);
+            width:100%;
+        }
+
+        .opt:hover:not(:disabled) {
+            border-color:var(--accent);
+        }
+
+        .opt:disabled {
+            transform:none;
+        }
+
+        .okey {
+            flex-shrink:0;
+
+            width:25px;
+            height:25px;
+
+            border-radius:8px;
+
+            background:var(--panel2);
+
+            display:grid;
+            place-items:center;
+
+            font-family:var(--font-code);
+            font-size:11.5px;
+            font-weight:800;
+
+            color:var(--muted);
+        }
+
+        .otext {
+            flex:1;
+            font-size:var(--fs-base);
+        }
+
+        .omark {
+            flex-shrink:0;
+            font-size:17px;
+            font-weight:800;
+            opacity:0;
+            transition:.2s;
+        }
+
+        .opt.sel {
+            border-color:var(--accent);
+            background:
+                    color-mix(
+                            in srgb,
+                            var(--accent) 9%,
+                            transparent
+                    );
+        }
+
+        .opt.sel .okey {
+            background:var(--accent);
+            color:var(--bg);
+        }
+
+        .opt.right {
+            border-color:var(--green);
+            background:
+                    color-mix(
+                            in srgb,
+                            var(--green) 10%,
+                            transparent
+                    );
+        }
+
+        .opt.right .okey {
+            background:var(--green);
+            color:var(--bg);
+        }
+
+        .opt.right .omark {
+            opacity:1;
+            color:var(--green);
+        }
+
+        .opt.bad {
+            border-color:var(--red);
+            background:
+                    color-mix(
+                            in srgb,
+                            var(--red) 10%,
+                            transparent
+                    );
+        }
+
+        .opt.bad .okey {
+            background:var(--red);
+            color:var(--bg);
+        }
+
+        .opt.bad .omark {
+            opacity:1;
+            color:var(--red);
+        }
+
+        .opt.miss {
+            border-color:var(--yellow);
+            background:
+                    color-mix(
+                            in srgb,
+                            var(--yellow) 9%,
+                            transparent
+                    );
+        }
+
+        .opt.miss .omark {
+            opacity:1;
+            color:var(--yellow);
+        }
+
+
+        /* ============================================================
+           EXPLANATION
+           ============================================================ */
+
+        .exp {
+            margin-top:17px;
+            border-radius:14px;
+            overflow:hidden;
+
+            animation:
+                    expand .4s cubic-bezier(.2,.8,.3,1);
+        }
+
+        @keyframes expand {
+            from {
+                opacity:0;
+                max-height:0;
+            }
+
+            to {
+                opacity:1;
+                max-height:700px;
+            }
+        }
+
+        .exp-head {
+            padding:11px 16px;
+
+            font-weight:700;
+            font-size:14px;
+
+            display:flex;
+            align-items:center;
+            gap:8px;
+        }
+
+        .exp.ok .exp-head {
+            background:
+                    color-mix(
+                            in srgb,
+                            var(--green) 13%,
+                            transparent
+                    );
+            color:var(--green);
+        }
+
+        .exp.no .exp-head {
+            background:
+                    color-mix(
+                            in srgb,
+                            var(--red) 13%,
+                            transparent
+                    );
+            color:var(--red);
+        }
+
+        .exp-body {
+            padding:14px 16px;
+
+            background:var(--opt-bg);
+
+            font-size:var(--fs-base);
+            line-height:1.6;
+        }
+
+        .exp-right {
+            margin-bottom:9px;
+            padding-bottom:9px;
+            border-bottom:1px solid var(--border);
+        }
+
+        .exp-right b {
+            color:var(--green);
+        }
+
+        .exp-why {
+            color:var(--muted);
+        }
+
+        .exp-why b {
+            color:var(--text);
+            font-weight:650;
+        }
+
+        .next-wrap {
+            margin-top:16px;
+        }
+
+        .next-btn {
+            padding:11px 22px;
+        }
+
+
+        /* ============================================================
+           RESULTS
+           ============================================================ */
+
+        .res {
+            text-align:center;
+            padding:40px 26px;
+
+            border:1px solid var(--border);
+            border-radius:20px;
+
+            background:var(--panel);
+            box-shadow:var(--shadow);
+
+            animation:slideIn .5s;
+        }
+
+        .res-emo {
+            font-size:58px;
+            margin-bottom:12px;
+        }
+
+        .res h2 {
+            color:var(--text-strong);
+            font-size:26px;
+            letter-spacing:-.03em;
+            margin-bottom:7px;
+        }
+
+        .res .grade {
+            color:var(--muted);
+            margin-bottom:26px;
+            font-size:var(--fs-base);
+        }
+
+        .stats {
+            display:grid;
+            grid-template-columns:repeat(3,1fr);
+            gap:12px;
+            max-width:420px;
+            margin:0 auto 26px;
+        }
+
+        .stat {
+            padding:16px 10px;
+
+            border:1px solid var(--border);
+            border-radius:14px;
+
+            background:var(--opt-bg);
+        }
+
+        .sval {
+            font-size:26px;
+            font-weight:800;
+            letter-spacing:-.03em;
+        }
+
+        .slbl {
+            color:var(--muted);
+            font-size:10.5px;
+            text-transform:uppercase;
+            letter-spacing:.07em;
+            margin-top:2px;
+        }
+
+        .stat.g .sval {
+            color:var(--green);
+        }
+
+        .stat.r .sval {
+            color:var(--red);
+        }
+
+        .stat.a .sval {
+            color:var(--accent);
+        }
+
+        .res-act {
+            display:flex;
+            gap:11px;
+            justify-content:center;
+            flex-wrap:wrap;
+        }
+
+        .hidden {
+            display:none !important;
+        }
+
+
+        /* ============================================================
+           RESPONSIVE
+           ============================================================ */
+
+        @media(max-width:700px) {
+            .settings {
+                position:static;
+
+                width:100%;
+                margin-bottom:18px;
+
+                justify-content:center;
+                flex-wrap:wrap;
+            }
+
+            .hero {
+                padding-top:0;
+            }
+        }
+
+        @media(max-width:600px) {
+            .wrap {
+                padding:24px 14px 60px;
+            }
+
+            .card {
+                padding:18px;
+            }
+
+            .q-text {
+                font-size:calc(var(--fs-base) + 1px);
+            }
+
+            .stats {
+                grid-template-columns:1fr;
+                max-width:230px;
+            }
+
+            .theme-select {
+                min-width:135px;
+            }
+
+            .font-slider {
+                width:75px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="wrap">
+
+    <!-- ============================================================
+         SETTINGS
+         ============================================================ -->
+
+    <div class="settings">
+
+        <select
+                id="themeSelect"
+                class="theme-select"
+                title="Выбрать тему"
+        >
+            <option value="gruvbox">☕ Gruvbox</option>
+            <option value="everforest">🌿 Everforest</option>
+            <option value="catppuccin">🐈 Catppuccin</option>
+            <option value="kanagawa">🌊 Kanagawa</option>
+            <option value="nord">❄️ Nord</option>
+            <option value="dracula">🧛 Dracula</option>
+            <option value="dark">🌙 GitHub Dark</option>
+            <option value="light">☀️ GitHub Light</option>
+        </select>
+
+        <div class="font-control">
+            <span>Текст:</span>
+            <span id="fontVal">15</span>px
+
+            <input
+                    type="range"
+                    id="fontSlider"
+                    class="font-slider"
+                    min="12"
+                    max="22"
+                    value="15"
+                    step="1"
+            >
+        </div>
+
+    </div>
+
+
+    <!-- ============================================================
+         MENU
+         ============================================================ -->
+
+    <section id="menu">
+
+        <div class="hero">
+
+            <div class="eyebrow">
+                C# Practice / theory quiz
+            </div>
+
+            <h1>
+                Тесты по теории
+            </h1>
+
+            <p>
+                Выбери тему или собери случайный набор.
+                После каждого ответа — подробный разбор,
+                почему правильный вариант именно такой.
+            </p>
+
+        </div>
+
+
+        <div class="grid" id="topicGrid"></div>
+
+
+        <div class="rnd">
+
+            <h2>
+                🎲 Случайный набор
+            </h2>
+
+            <div class="sub">
+                Вопросы берутся понемногу из каждой выбранной темы.
+            </div>
+
+            <div class="rnd-row">
+
+                <div class="cnt">
+                    <span>Вопросов:</span>
+
+                    <input
+                            type="number"
+                            id="rndCount"
+                            value="20"
+                            min="5"
+                            max="150"
+                    >
+                </div>
+
+                <label class="chk">
+                    <input
+                            type="checkbox"
+                            id="rndWidum"
+                            checked
+                    >
+                    Включить вопросы по шаблонам и STL-алгоритмам
+                </label>
+
+                <button
+                        class="primary"
+                        id="rndStart"
+                >
+                    Начать
+                </button>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ============================================================
+         QUIZ
+         ============================================================ -->
+
+    <section id="quiz" class="hidden">
+
+        <div class="qhead">
+
+            <div class="qbar">
+
+                <button
+                        class="back"
+                        id="quitBtn"
+                >
+                    ← Выйти
+                </button>
+
+                <span
+                        class="title"
+                        id="quizTitle"
+                ></span>
+
+                <span
+                        class="pill ok"
+                        id="pillOk"
+                >
+                    ✓ 0
+                </span>
+
+                <span
+                        class="pill bad"
+                        id="pillBad"
+                >
+                    ✗ 0
+                </span>
+
+            </div>
+
+            <div class="prog">
+                <div
+                        class="prog-fill"
+                        id="progFill"
+                        style="width:0%"
+                ></div>
+            </div>
+
+        </div>
+
+        <div
+                class="stack"
+                id="stack"
+        ></div>
+
+    </section>
+
+
+    <!-- ============================================================
+         RESULTS
+         ============================================================ -->
+
+    <section id="results" class="hidden">
+
+        <div class="res">
+
+            <div
+                    class="res-emo"
+                    id="resEmo"
+            >
+                🎉
+            </div>
+
+            <h2 id="resTitle"></h2>
+
+            <div
+                    class="grade"
+                    id="resGrade"
+            ></div>
+
+            <div class="stats">
+
+                <div class="stat g">
+                    <div
+                            class="sval"
+                            id="sOk"
+                    >
+                        0
+                    </div>
+
+                    <div class="slbl">
+                        Верно
+                    </div>
+                </div>
+
+                <div class="stat r">
+                    <div
+                            class="sval"
+                            id="sBad"
+                    >
+                        0
+                    </div>
+
+                    <div class="slbl">
+                        Ошибок
+                    </div>
+                </div>
+
+                <div class="stat a">
+                    <div
+                            class="sval"
+                            id="sPct"
+                    >
+                        0%
+                    </div>
+
+                    <div class="slbl">
+                        Результат
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="res-act">
+
+                <button
+                        class="primary"
+                        id="retryBtn"
+                >
+                    Пройти заново
+                </button>
+
+                <button id="reviewBtn">
+                    Посмотреть разбор
+                </button>
+
+                <button id="menuBtn">
+                    К списку тем
+                </button>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</div>
+
+
+<script>
+    "use strict";
+
+
+    /* ============================================================
+       БАНК ВОПРОСОВ
+
+       q       — вопрос
+       a       — варианты
+       correct — индексы верных ответов
+       exp     — объяснение
+       ============================================================ */
+
+    const BANK = {
+
+        /* ============================================================
+           ОСНОВЫ C#
+           ============================================================ */
+
+        basics: {
+            icon:"🔤",
+            name:"Основы C#",
+            q:[
+
+                {
+                    q:'Какой метод может быть точкой входа в программу на C#?',
+                    a:[
+                        '<code>public static void Main()</code>',
+                        '<code>public void Main()</code>',
+                        '<code>static Main()</code>',
+                        '<code>public static void main()</code>'
+                    ],
+                    correct:[0],
+                    exp:'Точка входа называется <code>Main</code> с заглавной буквы и должна быть <code>static</code>. Регистр в C# важен.'
+                },
+
+                {
+                    q:'Зачем нужна строка <code>using System;</code>?',
+                    a:[
+                        'Запускает программу',
+                        'Подключает пространство имён с <code>Console</code> и <code>Math</code>',
+                        'Создаёт класс <code>Program</code>',
+                        'Включает сборку мусора'
+                    ],
+                    correct:[1],
+                    exp:'<code>using</code> позволяет писать <code>Console</code> вместо <code>System.Console</code>. Без него компилятор не найдёт имя.'
+                },
+
+                {
+                    q:'Чем заканчивается инструкция в C#?',
+                    a:[
+                        'Двоеточием',
+                        'Точкой с запятой',
+                        'Переводом строки',
+                        'Ключевым словом end'
+                    ],
+                    correct:[1],
+                    exp:'Инструкции разделяются символом <code>;</code>. Перевод строки компилятор не учитывает.'
+                },
+
+                {
+                    q:'Где должен быть объявлен метод <code>Main</code>?',
+                    a:[
+                        'Вне любого типа',
+                        'Внутри класса или структуры',
+                        'Только в файле <code>Program.cs</code>',
+                        'В пространстве имён напрямую'
+                    ],
+                    correct:[1],
+                    exp:'В C# весь код находится внутри типов. Точка входа — статический метод класса или структуры.'
+                },
+
+                {
+                    q:'Чем <code>Console.WriteLine</code> отличается от <code>Console.Write</code>?',
+                    a:[
+                        'Печатает в stderr',
+                        'Добавляет перевод строки после вывода',
+                        'Работает только со строками',
+                        'Очищает консоль'
+                    ],
+                    correct:[1],
+                    exp:'<code>WriteLine</code> добавляет <code>\\n</code>, <code>Write</code> печатает ровно переданные символы. Это важно для точных тестов.'
+                },
+
+                {
+                    q:'Что произойдёт, если файл с точкой входа не содержит <code>using System;</code>?',
+                    a:[
+                        'Программа всё равно соберётся',
+                        '<code>Console</code> не будет найден, если не указать полное имя',
+                        'Ошибка выполнения',
+                        'Автоматически подключится <code>System.IO</code>'
+                    ],
+                    correct:[1],
+                    exp:'Компилятор не подставляет пространства имён сам. Поможет либо <code>using System;</code>, либо <code>System.Console.WriteLine</code>.'
+                }
+            ]
+        },
+
+        /* ============================================================
+           ВВОД И ВЫВОД
+           ============================================================ */
+
+        io: {
+            icon:"⌨️",
+            name:"Ввод и вывод",
+            q:[
+
+                {
+                    q:'Какой тип возвращает <code>Console.ReadLine()</code>?',
+                    a:[
+                        '<code>int</code>',
+                        '<code>string</code>',
+                        '<code>char[]</code>',
+                        '<code>object</code>'
+                    ],
+                    correct:[1],
+                    exp:'<code>ReadLine</code> всегда возвращает строку без завершающего перевода строки. Числа нужно разбирать отдельно.'
+                },
+
+                {
+                    q:'Как прочитать целое число с консоли?',
+                    a:[
+                        '<code>int x = Console.ReadLine();</code>',
+                        '<code>int x = int.Parse(Console.ReadLine());</code>',
+                        '<code>int x = Console.Read();</code>',
+                        '<code>int x = (int)Console.ReadLine();</code>'
+                    ],
+                    correct:[1],
+                    exp:'<code>int.Parse</code> преобразует строку в число. Прямое приведение строки к <code>int</code> не компилируется.'
+                },
+
+                {
+                    q:'Что выведет <code>Console.Write("A"); Console.Write("B");</code>?',
+                    a:[
+                        '<code>A</code> и <code>B</code> на разных строках',
+                        '<code>AB</code> без перевода строки',
+                        '<code>A B</code>',
+                        'Ошибку компиляции'
+                    ],
+                    correct:[1],
+                    exp:'<code>Write</code> не добавляет перевод строки, поэтому символы идут подряд.'
+                },
+
+                {
+                    q:'Что вернёт <code>Console.ReadLine()</code>, если ввод закончился?',
+                    a:[
+                        'Пустую строку',
+                        '<code>null</code>',
+                        'Исключение',
+                        '<code>"0"</code>'
+                    ],
+                    correct:[1],
+                    exp:'При EOF <code>ReadLine</code> возвращает <code>null</code>. Обращение к методам <code>null</code> приводит к <code>NullReferenceException</code>.'
+                },
+
+                {
+                    q:'Как разбить строку на части по пробелу?',
+                    a:[
+                        '<code>line.Split(&#39; &#39;)</code>',
+                        '<code>line.Cut(&#39; &#39;)</code>',
+                        '<code>line.Parts(&#39; &#39;)</code>',
+                        '<code>line.ToArray(&#39; &#39;)</code>'
+                    ],
+                    correct:[0],
+                    exp:'<code>Split</code> возвращает массив строк. Для нескольких пробелов подряд добавляют <code>StringSplitOptions.RemoveEmptyEntries</code>.'
+                },
+
+                {
+                    q:'Как вставить значение в строку?',
+                    a:[
+                        '<code>"Sum: " + sum</code>',
+                        '<code>$"Sum: {sum}"</code>',
+                        '<code>"Sum: {0}", sum</code>',
+                        'Оба первых варианта'
+                    ],
+                    correct:[3],
+                    exp:'Конкатенация и интерполяция <code>$"..."</code> дают одинаковый результат. Третий вариант без <code>Console.WriteLine</code> — просто набор аргументов.'
+                }
+            ]
+        },
+
+        /* ============================================================
+           ВЫРАЖЕНИЯ
+           ============================================================ */
+
+        expr: {
+            icon:"➗",
+            name:"Выражения и вычисления",
+            q:[
+
+                {
+                    q:'Чему равно <code>7 / 2</code> для <code>int</code>?',
+                    a:[
+                        '<code>3.5</code>',
+                        '<code>3</code>',
+                        '<code>4</code>',
+                        'Ошибка компиляции'
+                    ],
+                    correct:[1],
+                    exp:'Деление целых отбрасывает дробную часть: результат <code>3</code>. Для дробного результата нужен <code>double</code>.'
+                },
+
+                {
+                    q:'Чему равно <code>7 % 2</code>?',
+                    a:[
+                        '<code>0</code>',
+                        '<code>1</code>',
+                        '<code>2</code>',
+                        '<code>3</code>'
+                    ],
+                    correct:[1],
+                    exp:'<code>%</code> возвращает остаток от деления: <code>7 = 3 * 2 + 1</code>.'
+                },
+
+                {
+                    q:'Чему равно <code>-7 / 2</code> в C#?',
+                    a:[
+                        '<code>-3</code>',
+                        '<code>-4</code>',
+                        '<code>-3.5</code>',
+                        '<code>3</code>'
+                    ],
+                    correct:[0],
+                    exp:'Деление целых отбрасывает дробную часть к нулю: <code>-3</code>. Остаток <code>-7 % 2</code> при этом равен <code>-1</code>.'
+                },
+
+                {
+                    q:'Почему для среднего пишут <code>(double)sum / n</code>?',
+                    a:[
+                        'Чтобы избежать переполнения',
+                        'Иначе деление будет целочисленным',
+                        'Так требует компилятор',
+                        'Чтобы округлить результат'
+                    ],
+                    correct:[1],
+                    exp:'Если оба операнда целые, дробная часть теряется. Приведение одного операнда к <code>double</code> делает деление дробным.'
+                },
+
+                {
+                    q:'Что содержит <code>Math.PI</code>?',
+                    a:[
+                        'Радиус окружности',
+                        'Число π',
+                        'Основание натурального логарифма',
+                        'Константу для перевода градусов'
+                    ],
+                    correct:[1],
+                    exp:'<code>Math.PI</code> — константа π с максимальной точностью для <code>double</code>.'
+                },
+
+                {
+                    q:'Чем <code>&&</code> отличается от <code>&</code> для <code>bool</code>?',
+                    a:[
+                        'Ничем',
+                        '<code>&&</code> вычисляет второй операнд только при необходимости',
+                        '<code>&</code> работает только с числами',
+                        '<code>&&</code> возвращает число'
+                    ],
+                    correct:[1],
+                    exp:'<code>&&</code> и <code>||</code> используют короткое замыкание. <code>&</code> и <code>|</code> вычисляют оба операнда всегда.'
+                }
+            ]
+        },
+
+        /* ============================================================
+           ЦИКЛЫ
+           ============================================================ */
+
+        loops: {
+            icon:"🔁",
+            name:"Циклы и последовательности",
+            q:[
+
+                {
+                    q:'Сколько итераций выполнит <code>for (int i = 0; i &lt; n; i++)</code>?',
+                    a:[
+                        '<code>n - 1</code>',
+                        '<code>n</code>',
+                        '<code>n + 1</code>',
+                        'Бесконечно'
+                    ],
+                    correct:[1],
+                    exp:'<code>i</code> принимает значения <code>0..n-1</code>, всего <code>n</code> итераций.'
+                },
+
+                {
+                    q:'Что даёт <code>foreach (char c in line)</code>?',
+                    a:[
+                        'Байты строки',
+                        'Символы <code>char</code> по одному',
+                        'Слова',
+                        'Индексы символов'
+                    ],
+                    correct:[1],
+                    exp:'<code>foreach</code> по строке перебирает <code>char</code>. Для индексов нужен обычный <code>for</code>.'
+                },
+
+                {
+                    q:'Что делает <code>break</code> внутри цикла?',
+                    a:[
+                        'Пропускает текущую итерацию',
+                        'Немедленно завершает цикл',
+                        'Перезапускает цикл',
+                        'Завершает программу'
+                    ],
+                    correct:[1],
+                    exp:'<code>break</code> выходит из ближайшего цикла. Для пропуска итерации есть <code>continue</code>.'
+                },
+
+                {
+                    q:'Чем <code>do { ... } while (cond);</code> отличается от <code>while</code>?',
+                    a:[
+                        'Тело выполнится хотя бы один раз',
+                        'Работает быстрее',
+                        'Не проверяет условие',
+                        'Не поддерживает <code>break</code>'
+                    ],
+                    correct:[0],
+                    exp:'<code>do-while</code> проверяет условие после тела, поэтому тело выполняется минимум один раз.'
+                },
+
+                {
+                    q:'Как выделить последнюю цифру числа <code>n</code>?',
+                    a:[
+                        '<code>n / 10</code>',
+                        '<code>n % 10</code>',
+                        '<code>n % 2</code>',
+                        '<code>n - 10</code>'
+                    ],
+                    correct:[1],
+                    exp:'Остаток по модулю 10 даёт последнюю цифру. Затем <code>n /= 10</code> отбрасывает её.'
+                },
+
+                {
+                    q:'Зачем в проверке простоты пишут <code>i * i &lt;= n</code>?',
+                    a:[
+                        'Чтобы проверить все делители до <code>n</code>',
+                        'Достаточно делителей до корня из <code>n</code>',
+                        'Чтобы избежать чётных делителей',
+                        'Так требует <code>for</code>'
+                    ],
+                    correct:[1],
+                    exp:'Если делитель больше корня, парный ему делитель меньше корня и уже был проверен. Это сокращает перебор.'
+                }
+            ]
+        },
+
+        /* ============================================================
+           МАССИВЫ И LIST
+           ============================================================ */
+
+        arrays: {
+            icon:"📚",
+            name:"Массивы и List<T>",
+            q:[
+
+                {
+                    q:'С какого индекса начинается массив в C#?',
+                    a:[
+                        '<code>0</code>',
+                        '<code>1</code>',
+                        'Зависит от настроек',
+                        '<code>-1</code>'
+                    ],
+                    correct:[0],
+                    exp:'Индексация начинается с нуля. У массива из пяти элементов допустимы индексы <code>0..4</code>.'
+                },
+
+                {
+                    q:'Что содержит новый <code>int[] a = new int[5];</code>?',
+                    a:[
+                        'Мусорные значения',
+                        'Пять нулей',
+                        '<code>null</code>',
+                        'Пять единиц'
+                    ],
+                    correct:[1],
+                    exp:'Массивы и поля классов инициализируются значениями по умолчанию: для <code>int</code> это <code>0</code>.'
+                },
+
+                {
+                    q:'Чем <code>List&lt;int&gt;</code> удобнее массива?',
+                    a:[
+                        'Работает быстрее',
+                        'Может расти через <code>Add</code>',
+                        'Не имеет индексов',
+                        'Хранит только уникальные значения'
+                    ],
+                    correct:[1],
+                    exp:'<code>List&lt;T&gt;</code> — динамический массив. Размер массива фиксируется при создании.'
+                },
+
+                {
+                    q:'Какое свойство даёт количество элементов <code>List&lt;int&gt;</code>?',
+                    a:[
+                        '<code>Length</code>',
+                        '<code>Count</code>',
+                        '<code>Size</code>',
+                        '<code>Capacity</code>'
+                    ],
+                    correct:[1],
+                    exp:'У массива — <code>Length</code>, у <code>List&lt;T&gt;</code> — <code>Count</code>. <code>Capacity</code> — вместимость внутреннего массива.'
+                },
+
+                {
+                    q:'Как вывести список чисел через пробел?',
+                    a:[
+                        '<code>string.Join(" ", numbers)</code>',
+                        '<code>numbers.Join(" ")</code>',
+                        '<code>string.Split(numbers, " ")</code>',
+                        '<code>Console.Write(numbers)</code>'
+                    ],
+                    correct:[0],
+                    exp:'<code>string.Join</code> превращает элементы в строки и соединяет разделителем.'
+                },
+
+                {
+                    q:'Что делает <code>Array.Reverse(chars)</code>?',
+                    a:[
+                        'Возвращает новый массив',
+                        'Меняет порядок элементов на месте',
+                        'Сортирует массив',
+                        'Удаляет повторы'
+                    ],
+                    correct:[1],
+                    exp:'<code>Array.Reverse</code> изменяет переданный массив. Возвращаемого значения нет.'
+                }
+            ]
+        },
+
+        /* ============================================================
+           СТРОКИ
+           ============================================================ */
+
+        strings: {
+            icon:"🔤",
+            name:"Строки",
+            q:[
+
+                {
+                    q:'Что означает неизменяемость <code>string</code>?',
+                    a:[
+                        'Строку нельзя прочитать',
+                        'Методы возвращают новую строку, исходная не меняется',
+                        'Строку нельзя сравнить',
+                        'Строка хранится только в стеке'
+                    ],
+                    correct:[1],
+                    exp:'<code>ToUpper</code>, <code>Replace</code> и другие методы возвращают новую строку. Исходная остаётся прежней.'
+                },
+
+                {
+                    q:'Что возвращает <code>"abc".Length</code>?',
+                    a:[
+                        'Количество байтов',
+                        'Количество <code>char</code> (единиц UTF-16)',
+                        'Количество слов',
+                        'Количество рун'
+                    ],
+                    correct:[1],
+                    exp:'<code>Length</code> считает <code>char</code>. Для эмодзи, занимающих суррогатную пару, это число больше видимых символов.'
+                },
+
+                {
+                    q:'Почему используют <code>ToUpperInvariant()</code>?',
+                    a:[
+                        'Работает быстрее',
+                        'Результат не зависит от локали машины',
+                        'Меняет только первую букву',
+                        'Удаляет пробелы'
+                    ],
+                    correct:[1],
+                    exp:'Регистр в некоторых культурах особый (например, турецкая <code>i</code>). <code>Invariant</code> даёт стабильный результат.'
+                },
+
+                {
+                    q:'Что сравнивает <code>==</code> для двух <code>string</code>?',
+                    a:[
+                        'Ссылки',
+                        'Содержимое строк',
+                        'Длину',
+                        'Хеш-коды'
+                    ],
+                    correct:[1],
+                    exp:'В C# <code>==</code> для <code>string</code> перегружен и сравнивает содержимое, в отличие от Java.'
+                },
+
+                {
+                    q:'Зачем нужен <code>StringSplitOptions.RemoveEmptyEntries</code>?',
+                    a:[
+                        'Удаляет пробелы внутри слов',
+                        'Не включает пустые куски между разделителями',
+                        'Сортирует части',
+                        'Меняет регистр'
+                    ],
+                    correct:[1],
+                    exp:'Без флага <code>"a  b".Split(&#39; &#39;)</code> даст пустой элемент между двумя пробелами.'
+                },
+
+                {
+                    q:'Как собрать строку из массива <code>char[] chars</code>?',
+                    a:[
+                        '<code>chars.ToString()</code>',
+                        '<code>new string(chars)</code>',
+                        '<code>string.Join(chars)</code>',
+                        '<code>(string)chars</code>'
+                    ],
+                    correct:[1],
+                    exp:'Конструктор <code>new string(char[])</code> создаёт строку из символов. <code>chars.ToString()</code> вернёт имя типа.'
+                }
+            ]
+        },
+
+        /* ============================================================
+           КЛАССЫ
+           ============================================================ */
+
+        classes: {
+            icon:"🧩",
+            name:"Классы и объекты",
+            q:[
+
+                {
+                    q:'Как называется метод-конструктор?',
+                    a:[
+                        'Как класс, без возвращаемого типа',
+                        'Всегда <code>Init</code>',
+                        'С ключевым словом <code>constructor</code>',
+                        'С типом <code>void</code>'
+                    ],
+                    correct:[0],
+                    exp:'Конструктор называется как класс и не указывает возвращаемый тип. Он вызывается при <code>new</code>.'
+                },
+
+                {
+                    q:'Что делает <code>new Point(3, 4)</code>?',
+                    a:[
+                        'Вызывает статический метод',
+                        'Создаёт объект и вызывает конструктор',
+                        'Копирует класс',
+                        'Объявляет переменную без значения'
+                    ],
+                    correct:[1],
+                    exp:'<code>new</code> выделяет объект в управляемой куче и передаёт аргументы конструктору.'
+                },
+
+                {
+                    q:'Какая пара ключевых слов включает полиморфизм?',
+                    a:[
+                        '<code>static</code> и <code>const</code>',
+                        '<code>virtual</code> и <code>override</code>',
+                        '<code>public</code> и <code>private</code>',
+                        '<code>abstract</code> и <code>readonly</code>'
+                    ],
+                    correct:[1],
+                    exp:'<code>virtual</code> разрешает замену в наследнике, <code>override</code> выполняет замену. Вызов идёт по фактическому типу.'
+                },
+
+                {
+                    q:'Можно ли создать объект абстрактного класса?',
+                    a:[
+                        'Да, если есть конструктор',
+                        'Нет, только объект наследника',
+                        'Да, через <code>new</code>',
+                        'Только внутри самого класса'
+                    ],
+                    correct:[1],
+                    exp:'<code>abstract</code> класс задаёт контракт, но не может быть создан напрямую. Нужен конкретный наследник.'
+                },
+
+                {
+                    q:'Какой метод вызывает <code>Console.WriteLine(obj)</code>?',
+                    a:[
+                        '<code>Print</code>',
+                        '<code>ToString</code>',
+                        '<code>GetType</code>',
+                        '<code>Equals</code>'
+                    ],
+                    correct:[1],
+                    exp:'<code>WriteLine</code> приводит объект к строке через <code>ToString()</code>. Метод можно переопределить.'
+                },
+
+                {
+                    q:'Когда можно присвоить значение <code>readonly</code>-полю?',
+                    a:[
+                        'В любой момент',
+                        'Только в конструкторе или при объявлении',
+                        'Только через свойство',
+                        'Никогда'
+                    ],
+                    correct:[1],
+                    exp:'<code>readonly</code> запрещает запись после конструктора. Это защищает данные объекта от случайных изменений.'
+                }
+            ]
+        },
+
+        /* ============================================================
+           КОЛЛЕКЦИИ
+           ============================================================ */
+
+        containers: {
+            icon:"🗂️",
+            name:"Коллекции",
+            q:[
+
+                {
+                    q:'Какая средняя сложность поиска по ключу в <code>Dictionary</code>?',
+                    a:[
+                        '<code>O(1)</code>',
+                        '<code>O(log n)</code>',
+                        '<code>O(n)</code>',
+                        '<code>O(n log n)</code>'
+                    ],
+                    correct:[0],
+                    exp:'<code>Dictionary</code> использует хеш-таблицу, поэтому поиск в среднем константный.'
+                },
+
+                {
+                    q:'Что делает <code>map.TryGetValue(key, out value)</code>?',
+                    a:[
+                        'Бросает исключение при отсутствии ключа',
+                        'Возвращает <code>bool</code> и кладёт значение в <code>value</code>',
+                        'Удаляет ключ',
+                        'Сортирует словарь'
+                    ],
+                    correct:[1],
+                    exp:'<code>TryGetValue</code> безопасно проверяет наличие ключа и сразу отдаёт значение.'
+                },
+
+                {
+                    q:'Какая коллекция хранит только уникальные значения?',
+                    a:[
+                        '<code>List&lt;T&gt;</code>',
+                        '<code>HashSet&lt;T&gt;</code>',
+                        '<code>Queue&lt;T&gt;</code>',
+                        '<code>Stack&lt;T&gt;</code>'
+                    ],
+                    correct:[1],
+                    exp:'<code>HashSet</code> не допускает повторов. <code>Add</code> возвращает <code>false</code>, если элемент уже есть.'
+                },
+
+                {
+                    q:'Чем <code>SortedDictionary</code> отличается от <code>Dictionary</code>?',
+                    a:[
+                        'Хранит ключи упорядоченными',
+                        'Не поддерживает строковые ключи',
+                        'Работает быстрее',
+                        'Не допускает удаления'
+                    ],
+                    correct:[0],
+                    exp:'<code>SortedDictionary</code> обходит ключи по возрастанию, но вставка стоит <code>O(log n)</code>.'
+                },
+
+                {
+                    q:'Можно ли полагаться на порядок обхода <code>Dictionary</code>?',
+                    a:[
+                        'Да, всегда по алфавиту',
+                        'Да, по порядку вставки',
+                        'Нет, порядок не определён',
+                        'Да, по возрастанию хешей'
+                    ],
+                    correct:[2],
+                    exp:'Порядок обхода <code>Dictionary</code> не гарантируется. Для стабильного вывода ключи сортируют отдельно.'
+                },
+
+                {
+                    q:'Что произойдёт при <code>map[key] = value</code>, если ключ уже есть?',
+                    a:[
+                        'Ошибка',
+                        'Значение заменится',
+                        'Добавится второй ключ',
+                        'Ключ удалится'
+                    ],
+                    correct:[1],
+                    exp:'Индексатор заменяет существующее значение. Для добавления без замены используют <code>Add</code>, который бросит исключение при дубликате.'
+                }
+            ]
+        },
+
+        /* ============================================================
+           ИСКЛЮЧЕНИЯ
+           ============================================================ */
+
+        errors: {
+            icon:"🛡️",
+            name:"Исключения и using",
+            q:[
+
+                {
+                    q:'Какое исключение бросает целочисленное деление на ноль?',
+                    a:[
+                        '<code>ArgumentException</code>',
+                        '<code>DivideByZeroException</code>',
+                        '<code>OverflowException</code>',
+                        '<code>FormatException</code>'
+                    ],
+                    correct:[1],
+                    exp:'Деление целого на ноль даёт <code>DivideByZeroException</code>. Для <code>double</code> результатом будет бесконечность.'
+                },
+
+                {
+                    q:'Чем <code>int.TryParse</code> лучше <code>int.Parse</code> для пользовательского ввода?',
+                    a:[
+                        'Работает быстрее',
+                        'Не бросает исключение при ошибке',
+                        'Поддерживает дробные числа',
+                        'Меняет культуру'
+                    ],
+                    correct:[1],
+                    exp:'<code>TryParse</code> возвращает <code>false</code> вместо <code>FormatException</code>. Ошибка ввода — ожидаемая ситуация.'
+                },
+
+                {
+                    q:'От какого класса наследуют свои исключения?',
+                    a:[
+                        '<code>Exception</code>',
+                        '<code>Error</code>',
+                        '<code>Throwable</code>',
+                        '<code>Object</code> напрямую'
+                    ],
+                    correct:[0],
+                    exp:'Пользовательское исключение наследуют от <code>Exception</code> и передают сообщение в <code>base(message)</code>.'
+                },
+
+                {
+                    q:'В каком порядке должны идти <code>catch</code>?',
+                    a:[
+                        'Сначала общий <code>Exception</code>, потом конкретные',
+                        'Сначала конкретные, потом общий',
+                        'Порядок не важен',
+                        'Только один <code>catch</code>'
+                    ],
+                    correct:[1],
+                    exp:'<code>catch</code> проверяются сверху вниз. Общий <code>Exception</code> первым перехватит всё и сделает остальные недостижимыми.'
+                },
+
+                {
+                    q:'Что делает <code>using (var r = new Resource()) { ... }</code>?',
+                    a:[
+                        'Импортирует пространство имён',
+                        'Вызывает <code>Dispose()</code> при выходе из блока',
+                        'Создаёт поток',
+                        'Блокирует файл навсегда'
+                    ],
+                    correct:[1],
+                    exp:'<code>using</code>-блок гарантирует вызов <code>Dispose</code> даже при исключении. Это аналог <code>try/finally</code>.'
+                },
+
+                {
+                    q:'Какое исключение бросает выход за границы массива?',
+                    a:[
+                        '<code>ArgumentOutOfRangeException</code>',
+                        '<code>IndexOutOfRangeException</code>',
+                        '<code>NullReferenceException</code>',
+                        '<code>InvalidOperationException</code>'
+                    ],
+                    correct:[1],
+                    exp:'У массива — <code>IndexOutOfRangeException</code>. У <code>List&lt;T&gt;</code> индексатор бросает <code>ArgumentOutOfRangeException</code>.'
+                }
+            ]
+        },
+
+        /* ============================================================
+           ФАЙЛЫ
+           ============================================================ */
+
+        files: {
+            icon:"📁",
+            name:"Файлы",
+            q:[
+
+                {
+                    q:'Как прочитать весь текстовый файл?',
+                    a:[
+                        '<code>File.ReadAllText(path)</code>',
+                        '<code>File.OpenText(path)</code>',
+                        '<code>File.Load(path)</code>',
+                        '<code>Console.Read(path)</code>'
+                    ],
+                    correct:[0],
+                    exp:'<code>ReadAllText</code> возвращает строку целиком. <code>OpenText</code> даёт <code>StreamReader</code>, который нужно закрывать.'
+                },
+
+                {
+                    q:'Что делает <code>File.WriteAllText(path, text)</code>, если файл существует?',
+                    a:[
+                        'Дописывает в конец',
+                        'Перезаписывает содержимое',
+                        'Бросает исключение',
+                        'Создаёт копию'
+                    ],
+                    correct:[1],
+                    exp:'<code>WriteAllText</code> заменяет файл целиком. Для дописывания есть <code>AppendAllText</code>.'
+                },
+
+                {
+                    q:'Как скопировать файл с заменой существующего?',
+                    a:[
+                        '<code>File.Copy(src, dst)</code>',
+                        '<code>File.Copy(src, dst, true)</code>',
+                        '<code>File.Move(src, dst)</code>',
+                        '<code>File.Replace(src, dst)</code>'
+                    ],
+                    correct:[1],
+                    exp:'Третий аргумент <code>overwrite: true</code> разрешает перезапись. Без него существующий файл вызовет <code>IOException</code>.'
+                },
+
+                {
+                    q:'Как получить массив строк файла без символов перевода строки?',
+                    a:[
+                        '<code>File.ReadAllText(path).Split()</code>',
+                        '<code>File.ReadAllLines(path)</code>',
+                        '<code>File.ReadLines(path).ToString()</code>',
+                        '<code>File.Open(path)</code>'
+                    ],
+                    correct:[1],
+                    exp:'<code>ReadAllLines</code> возвращает <code>string[]</code>, где каждый элемент — строка файла без <code>\\n</code>.'
+                },
+
+                {
+                    q:'Какое пространство имён нужно для <code>File</code>?',
+                    a:[
+                        '<code>System.Text</code>',
+                        '<code>System.IO</code>',
+                        '<code>System.Data</code>',
+                        '<code>System.Net</code>'
+                    ],
+                    correct:[1],
+                    exp:'Классы файлов и потоков находятся в <code>System.IO</code>.'
+                },
+
+                {
+                    q:'Что произойдёт при чтении несуществующего файла через <code>File.ReadAllText</code>?',
+                    a:[
+                        'Вернётся пустая строка',
+                        '<code>FileNotFoundException</code>',
+                        '<code>null</code>',
+                        'Создастся пустой файл'
+                    ],
+                    correct:[1],
+                    exp:'Метод бросает <code>FileNotFoundException</code>. Её обрабатывают, если файл может отсутствовать.'
+                }
+            ]
+        },
+
+        /* ============================================================
+           ПОТОКИ
+           ============================================================ */
+
+        concurrency: {
+            icon:"⚡",
+            name:"Потоки и задачи",
+            q:[
+
+                {
+                    q:'Как запустить поток после создания <code>Thread t</code>?',
+                    a:[
+                        '<code>t.Run()</code>',
+                        '<code>t.Start()</code>',
+                        '<code>t.Begin()</code>',
+                        '<code>t.Execute()</code>'
+                    ],
+                    correct:[1],
+                    exp:'<code>Start</code> запускает выполнение делегата в новом потоке. До вызова поток не работает.'
+                },
+
+                {
+                    q:'Что делает <code>t.Join()</code>?',
+                    a:[
+                        'Останавливает поток навсегда',
+                        'Ждёт завершения потока <code>t</code>',
+                        'Создаёт копию потока',
+                        'Меняет приоритет'
+                    ],
+                    correct:[1],
+                    exp:'<code>Join</code> блокирует текущий поток, пока <code>t</code> не завершится. Это делает порядок вывода детерминированным.'
+                },
+
+                {
+                    q:'Зачем нужен <code>lock</code> при изменении общего счётчика?',
+                    a:[
+                        'Чтобы ускорить программу',
+                        'Чтобы обновление было атомарным',
+                        'Чтобы создать поток',
+                        'Чтобы очистить память'
+                    ],
+                    correct:[1],
+                    exp:'<code>counter++</code> состоит из чтения, сложения и записи. <code>lock</code> не даёт двум потокам выполнять эти шаги одновременно.'
+                },
+
+                {
+                    q:'Что делает <code>Task.Run</code>?',
+                    a:[
+                        'Создаёт поток ОС напрямую',
+                        'Ставит делегат в пул потоков',
+                        'Блокирует текущий поток',
+                        'Завершает программу'
+                    ],
+                    correct:[1],
+                    exp:'<code>Task.Run</code> использует пул потоков и возвращает <code>Task</code>, представляющий работу.'
+                },
+
+                {
+                    q:'Что делает обращение к <code>task.Result</code>?',
+                    a:[
+                        'Возвращает <code>null</code>, если задача не готова',
+                        'Блокирует поток до завершения задачи',
+                        'Отменяет задачу',
+                        'Запускает задачу повторно'
+                    ],
+                    correct:[1],
+                    exp:'<code>Result</code> ждёт завершения и возвращает значение. В UI-потоке это может привести к зависанию — там используют <code>await</code>.'
+                },
+
+                {
+                    q:'Как атомарно увеличить счётчик без <code>lock</code>?',
+                    a:[
+                        '<code>Interlocked.Increment(ref counter)</code>',
+                        '<code>counter + 1</code>',
+                        '<code>++counter</code>',
+                        '<code>counter = counter + 1</code>'
+                    ],
+                    correct:[0],
+                    exp:'<code>Interlocked.Increment</code> выполняет атомарную операцию. Обычный <code>++</code> не защищён от гонки.'
+                }
+            ]
+        },
+
+        /* ============================================================
+           ДЖЕНЕРИКИ И LINQ
+           ============================================================ */
+
+        advanced: {
+            icon:"🧠",
+            name:"Дженерики и LINQ",
+            src:true,
+            note:"Раздел 13 — необязательный",
+            q:[
+
+                {
+                    q:'Зачем нужно ограничение <code>where T : IComparable&lt;T&gt;</code>?',
+                    a:[
+                        'Чтобы запретить создание <code>T</code>',
+                        'Чтобы разрешить вызов <code>CompareTo</code>',
+                        'Чтобы <code>T</code> был числом',
+                        'Чтобы ускорить компиляцию'
+                    ],
+                    correct:[1],
+                    exp:'Без ограничения компилятор не знает, что у <code>T</code> есть <code>CompareTo</code>. Интерфейс это гарантирует.'
+                },
+
+                {
+                    q:'Что должна вернуть лямбда-сравнение в <code>Sort</code>?',
+                    a:[
+                        '<code>true</code> или <code>false</code>',
+                        'Отрицательное, ноль или положительное число',
+                        'Индексы элементов',
+                        'Новую коллекцию'
+                    ],
+                    correct:[1],
+                    exp:'Отрицательное значение — первый раньше; ноль — порядок не важен; положительное — первый позже.'
+                },
+
+                {
+                    q:'Какой метод LINQ оставляет только подходящие элементы?',
+                    a:[
+                        '<code>Select</code>',
+                        '<code>Where</code>',
+                        '<code>OrderBy</code>',
+                        '<code>Sum</code>'
+                    ],
+                    correct:[1],
+                    exp:'<code>Where</code> фильтрует по предикату. <code>Select</code> преобразует каждый элемент.'
+                },
+
+                {
+                    q:'Что делает <code>Select(x =&gt; x * x)</code>?',
+                    a:[
+                        'Фильтрует чётные числа',
+                        'Преобразует каждый элемент в квадрат',
+                        'Сортирует по возрастанию',
+                        'Складывает элементы'
+                    ],
+                    correct:[1],
+                    exp:'<code>Select</code> — проекция: создаёт последовательность преобразованных значений.'
+                },
+
+                {
+                    q:'Как объявить перегрузку оператора <code>+</code> для <code>Vector</code>?',
+                    a:[
+                        '<code>public Vector operator +(Vector a, Vector b)</code>',
+                        '<code>public static Vector operator +(Vector a, Vector b)</code>',
+                        '<code>public static Vector Add(Vector a, Vector b)</code>',
+                        '<code>public Vector +(Vector a, Vector b)</code>'
+                    ],
+                    correct:[1],
+                    exp:'Перегрузка оператора — <code>public static</code> метод с ключевым словом <code>operator</code> и хотя бы одним параметром своего типа.'
+                },
+
+                {
+                    q:'Почему для сортировки строк выбирают <code>string.CompareOrdinal</code>?',
+                    a:[
+                        'Он сравнивает длину строк',
+                        'Он не зависит от культуры и даёт стабильный порядок',
+                        'Он игнорирует регистр',
+                        'Он быстрее любого другого метода'
+                    ],
+                    correct:[1],
+                    exp:'<code>CompareOrdinal</code> сравнивает коды символов, поэтому результат одинаков на любой машине.'
+                }
+            ]
+        }
+    };
+
+
+
+    /* ============================================================
+       THEME / FONT
+       ============================================================ */
+
+    const root = document.documentElement;
+
+    const themeSelect = document.getElementById("themeSelect");
+    const fontSlider = document.getElementById("fontSlider");
+    const fontVal = document.getElementById("fontVal");
+
+    function setTheme(theme) {
+        root.setAttribute("data-theme", theme);
+
+        themeSelect.value = theme;
+
+        try {
+            localStorage.setItem(
+                "cs-practice-quiz-theme",
+                theme
+            );
+        } catch (e) {}
+    }
+
+    function setFontSize(val) {
+        root.style.setProperty(
+            "--fs-base",
+            val + "px"
+        );
+
+        fontVal.textContent = val;
+        fontSlider.value = val;
+
+        try {
+            localStorage.setItem(
+                "cs-practice-quiz-font",
+                val
+            );
+        } catch (e) {}
+    }
+
+    themeSelect.addEventListener(
+        "change",
+        function () {
+            setTheme(this.value);
+        }
+    );
+
+    fontSlider.addEventListener(
+        "input",
+        function () {
+            setFontSize(this.value);
+        }
+    );
+
+    (function () {
+        let savedTheme = null;
+        let savedFont = null;
+
+        try {
+            savedTheme =
+                localStorage.getItem(
+                    "cs-practice-quiz-theme"
+                );
+
+            savedFont =
+                localStorage.getItem(
+                    "cs-practice-quiz-font"
+                );
+        } catch (e) {}
+
+        setTheme(
+            savedTheme || "catppuccin"
+        );
+
+        setFontSize(
+            savedFont || "15"
+        );
+    })();
+
+
+    /* ============================================================
+       HELPERS
+       ============================================================ */
+
+    const KEYS = [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E",
+        "F"
+    ];
+
+    const $ = id =>
+        document.getElementById(id);
+
+    const screens = {
+        menu: $("menu"),
+        quiz: $("quiz"),
+        results: $("results")
+    };
+
+    let session = null;
+
+
+    function show(name) {
+        for (const k in screens) {
+            screens[k].classList.toggle(
+                "hidden",
+                k !== name
+            );
+        }
+
+        window.scrollTo({
+            top:0,
+            behavior:"instant"
+        });
+    }
+
+
+    function shuffle(a) {
+        for (
+            let i = a.length - 1;
+            i > 0;
+            i--
+        ) {
+            const j =
+                Math.floor(
+                    Math.random() * (i + 1)
+                );
+
+            [
+                a[i],
+                a[j]
+            ] = [
+                a[j],
+                a[i]
+            ];
+        }
+
+        return a;
+    }
+
+
+    function plural(
+        n,
+        one,
+        few,
+        many
+    ) {
+        const m10 = n % 10;
+        const m100 = n % 100;
+
+        if (
+            m10 === 1 &&
+            m100 !== 11
+        ) {
+            return one;
+        }
+
+        if (
+            m10 >= 2 &&
+            m10 <= 4 &&
+            (
+                m100 < 10 ||
+                m100 >= 20
+            )
+        ) {
+            return few;
+        }
+
+        return many;
+    }
+
+
+    function el(
+        tag,
+        cls,
+        txt
+    ) {
+        const n =
+            document.createElement(tag);
+
+        if (cls) {
+            n.className = cls;
+        }
+
+        if (txt !== undefined) {
+            n.textContent = txt;
+        }
+
+        return n;
+    }
+
+
+    /* ============================================================
+       MENU
+       ============================================================ */
+
+    function buildMenu() {
+        const grid =
+            $("topicGrid");
+
+        grid.replaceChildren();
+
+        for (const key in BANK) {
+
+            const t =
+                BANK[key];
+
+            const b =
+                el(
+                    "button",
+                    "topic" +
+                    (
+                        t.src
+                            ? " special"
+                            : ""
+                    )
+                );
+
+            b.append(
+                el(
+                    "span",
+                    "t-icon",
+                    t.icon
+                ),
+
+                el(
+                    "div",
+                    "t-name",
+                    t.name
+                ),
+
+                el(
+                    "div",
+                    "t-count",
+                    t.q.length +
+                    " " +
+                    plural(
+                        t.q.length,
+                        "вопрос",
+                        "вопроса",
+                        "вопросов"
+                    )
+                )
+            );
+
+            if (t.note) {
+                b.appendChild(
+                    el(
+                        "div",
+                        "t-note",
+                        "⚠ " + t.note
+                    )
+                );
+            }
+
+            b.addEventListener(
+                "click",
+                () => {
+
+                    const qs =
+                        t.q.map(
+                            q => ({
+                                ...q,
+                                _topic:t.name,
+                                _src:!!t.src
+                            })
+                        );
+
+                    startQuiz(
+                        t.name,
+                        shuffle(qs)
+                    );
+                }
+            );
+
+            grid.appendChild(b);
+        }
+    }
+
+
+    $("rndStart").addEventListener(
+        "click",
+        () => {
+
+            const want =
+                Math.max(
+                    5,
+                    Math.min(
+                        150,
+                        parseInt(
+                            $("rndCount").value
+                        ) || 20
+                    )
+                );
+
+            const useW =
+                $("rndWidum").checked;
+
+            const pools = [];
+
+            for (const key in BANK) {
+
+                if (
+                    key === "widum" &&
+                    !useW
+                ) {
+                    continue;
+                }
+
+                pools.push(
+                    BANK[key].q.map(
+                        q => ({
+                            ...q,
+                            _topic:BANK[key].name,
+                            _src:!!BANK[key].src
+                        })
+                    )
+                );
+            }
+
+            const per =
+                Math.ceil(
+                    want / pools.length
+                );
+
+            let picked = [];
+
+            pools.forEach(
+                p => {
+                    picked =
+                        picked.concat(
+                            shuffle(
+                                p.slice()
+                            ).slice(0, per)
+                        );
+                }
+            );
+
+            picked =
+                shuffle(picked).slice(
+                    0,
+                    want
+                );
+
+            if (!picked.length) {
+                alert(
+                    "Нет доступных вопросов."
+                );
+
+                return;
+            }
+
+            startQuiz(
+                "🎲 Случайный набор",
+                picked,
+                true
+            );
+        }
+    );
+
+
+    /* ============================================================
+       QUIZ
+       ============================================================ */
+
+    function startQuiz(
+        title,
+        questions,
+        showTopic
+    ) {
+        session = {
+            title,
+            questions,
+            showTopic:!!showTopic,
+            idx:0,
+            ok:0,
+            bad:0,
+            log:[]
+        };
+
+        $("quizTitle").textContent =
+            title;
+
+        $("stack").replaceChildren();
+
+        updateBar();
+
+        show("quiz");
+
+        addQuestionCard();
+    }
+
+
+    function updateBar() {
+
+        const s =
+            session;
+
+        $("pillOk").textContent =
+            "✓ " + s.ok;
+
+        $("pillBad").textContent =
+            "✗ " + s.bad;
+
+        $("progFill").style.width =
+            (
+                s.idx /
+                s.questions.length *
+                100
+            ) + "%";
+    }
+
+
+    function addQuestionCard() {
+
+        const s =
+            session;
+
+        const q =
+            s.questions[s.idx];
+
+        const multi =
+            q.correct.length > 1;
+
+        const num =
+            s.idx;
+
+        const card =
+            el(
+                "div",
+                "card"
+            );
+
+        card.dataset.idx =
+            num;
+
+
+        /* ------------------------------------------------------------
+           TOP TAGS
+           ------------------------------------------------------------ */
+
+        const top =
+            el(
+                "div",
+                "q-top"
+            );
+
+        top.appendChild(
+            el(
+                "span",
+                "q-num",
+                `Вопрос ${num + 1} / ${s.questions.length}`
+            )
+        );
+
+        if (multi) {
+            top.appendChild(
+                el(
+                    "span",
+                    "tag multi",
+                    "Несколько ответов"
+                )
+            );
+        }
+
+        if (q._src) {
+            top.appendChild(
+                el(
+                    "span",
+                    "tag src",
+                    "раздел 13"
+                )
+            );
+        }
+
+        if (
+            s.showTopic &&
+            q._topic &&
+            !q._src
+        ) {
+            top.appendChild(
+                el(
+                    "span",
+                    "tag topic",
+                    q._topic
+                )
+            );
+        }
+
+        card.appendChild(top);
+
+
+        /* ------------------------------------------------------------
+           QUESTION
+           ------------------------------------------------------------ */
+
+        var qText =
+            el(
+                "div",
+                "q-text"
+            );
+
+        qText.innerHTML =
+            q.q;
+
+        card.appendChild(qText);
+
+
+        /* ------------------------------------------------------------
+           OPTIONS
+           ------------------------------------------------------------ */
+
+        const opts =
+            el(
+                "div",
+                "opts"
+            );
+
+        const picked = [];
+        const btns = [];
+
+        q.a.forEach(
+            (text, i) => {
+
+                const b =
+                    el(
+                        "button",
+                        "opt"
+                    );
+
+                var oText =
+                    el(
+                        "span",
+                        "otext"
+                    );
+
+                oText.innerHTML =
+                    text;
+
+                b.append(
+                    el(
+                        "span",
+                        "okey",
+                        KEYS[i]
+                    ),
+
+                    oText,
+
+                    el(
+                        "span",
+                        "omark"
+                    )
+                );
+
+                b.addEventListener(
+                    "click",
+                    () => {
+
+                        if (
+                            card.dataset.done
+                        ) {
+                            return;
+                        }
+
+                        if (multi) {
+
+                            const p =
+                                picked.indexOf(i);
+
+                            if (p === -1) {
+                                picked.push(i);
+                                b.classList.add(
+                                    "sel"
+                                );
+                            } else {
+                                picked.splice(
+                                    p,
+                                    1
+                                );
+
+                                b.classList.remove(
+                                    "sel"
+                                );
+                            }
+
+                            checkBtn.disabled =
+                                picked.length === 0;
+
+                        } else {
+
+                            picked.length = 0;
+                            picked.push(i);
+
+                            reveal();
+                        }
+                    }
+                );
+
+                btns.push(b);
+                opts.appendChild(b);
+            }
+        );
+
+        card.appendChild(opts);
+
+
+        /* ------------------------------------------------------------
+           CHECK BUTTON
+           ------------------------------------------------------------ */
+
+        const checkWrap =
+            el(
+                "div",
+                "next-wrap"
+            );
+
+        const checkBtn =
+            el(
+                "button",
+                "primary next-btn",
+                "Проверить"
+            );
+
+        checkBtn.disabled =
+            true;
+
+        checkBtn.addEventListener(
+            "click",
+            reveal
+        );
+
+        if (multi) {
+            checkWrap.appendChild(
+                checkBtn
+            );
+
+            card.appendChild(
+                checkWrap
+            );
+        }
+
+
+        $("stack").appendChild(card);
+
+        card.scrollIntoView({
+            behavior:"smooth",
+            block:"center"
+        });
+
+
+        /* ------------------------------------------------------------
+           REVEAL
+           ------------------------------------------------------------ */
+
+        function reveal() {
+
+            if (
+                card.dataset.done
+            ) {
+                return;
+            }
+
+            card.dataset.done =
+                "1";
+
+            card.classList.add(
+                "done"
+            );
+
+            checkWrap.remove();
+
+
+            const right =
+                q.correct
+                    .slice()
+                    .sort()
+                    .join(",");
+
+            const mine =
+                picked
+                    .slice()
+                    .sort()
+                    .join(",");
+
+            const isOk =
+                right === mine;
+
+
+            btns.forEach(
+                (b, i) => {
+
+                    b.disabled =
+                        true;
+
+                    b.classList.remove(
+                        "sel"
+                    );
+
+                    const mark =
+                        b.querySelector(
+                            ".omark"
+                        );
+
+                    if (
+                        q.correct.includes(i)
+                    ) {
+
+                        if (
+                            picked.includes(i)
+                        ) {
+
+                            b.classList.add(
+                                "right"
+                            );
+
+                            mark.textContent =
+                                "✓";
+
+                        } else {
+
+                            b.classList.add(
+                                "miss"
+                            );
+
+                            mark.textContent =
+                                "!";
+                        }
+
+                    } else if (
+                        picked.includes(i)
+                    ) {
+
+                        b.classList.add(
+                            "bad"
+                        );
+
+                        mark.textContent =
+                            "✗";
+                    }
+                }
+            );
+
+
+            if (isOk) {
+                s.ok++;
+            } else {
+                s.bad++;
+            }
+
+
+            s.log.push({
+                q:q.q,
+                ok:isOk
+            });
+
+
+            /* --------------------------------------------------------
+               EXPLANATION
+               -------------------------------------------------------- */
+
+            const exp =
+                el(
+                    "div",
+                    "exp " +
+                    (
+                        isOk
+                            ? "ok"
+                            : "no"
+                    )
+                );
+
+            exp.appendChild(
+                el(
+                    "div",
+                    "exp-head",
+                    isOk
+                        ? "✓ Верно!"
+                        : "✗ Неверно"
+                )
+            );
+
+
+            const body =
+                el(
+                    "div",
+                    "exp-body"
+                );
+
+
+            const rl =
+                el(
+                    "div",
+                    "exp-right"
+                );
+
+            const rb =
+                el("b");
+
+            rb.textContent =
+                q.correct.length > 1
+                    ? "Правильные ответы: "
+                    : "Правильный ответ: ";
+
+            rl.appendChild(rb);
+
+            var rightText =
+                document.createElement("span");
+
+            rightText.innerHTML =
+                q.correct
+                    .map(
+                        i =>
+                            KEYS[i] +
+                            ") " +
+                            q.a[i]
+                    )
+                    .join("  ·  ");
+
+            rl.appendChild(rightText);
+
+            body.appendChild(rl);
+
+
+            const why =
+                el(
+                    "div",
+                    "exp-why"
+                );
+
+            why.innerHTML =
+                q.exp;
+
+            body.appendChild(why);
+
+            exp.appendChild(body);
+
+            card.appendChild(exp);
+
+
+            /* --------------------------------------------------------
+               NEXT BUTTON
+               -------------------------------------------------------- */
+
+            const nw =
+                el(
+                    "div",
+                    "next-wrap"
+                );
+
+            const isLast =
+                s.idx ===
+                s.questions.length - 1;
+
+            const nb =
+                el(
+                    "button",
+                    "primary next-btn",
+                    isLast
+                        ? "Показать результаты →"
+                        : "Следующий вопрос →"
+                );
+
+            nb.addEventListener(
+                "click",
+                () => {
+
+                    nw.remove();
+
+                    s.idx++;
+
+                    updateBar();
+
+                    if (
+                        s.idx >=
+                        s.questions.length
+                    ) {
+                        showResults();
+                    } else {
+                        addQuestionCard();
+                    }
+                }
+            );
+
+            nw.appendChild(nb);
+
+            card.appendChild(nw);
+
+
+            updateBar();
+
+
+            setTimeout(
+                () => {
+                    nb.scrollIntoView({
+                        behavior:"smooth",
+                        block:"center"
+                    });
+                },
+                120
+            );
+        }
+    }
+
+
+    /* ============================================================
+       EXIT
+       ============================================================ */
+
+    $("quitBtn").addEventListener(
+        "click",
+        () => {
+
+            if (
+                session &&
+                session.idx > 0 &&
+                !confirm(
+                    "Выйти? Прогресс не сохранится."
+                )
+            ) {
+                return;
+            }
+
+            show("menu");
+        }
+    );
+
+
+    /* ============================================================
+       RESULTS
+       ============================================================ */
+
+    function showResults() {
+
+        const s =
+            session;
+
+        const total =
+            s.questions.length;
+
+        const pct =
+            Math.round(
+                s.ok /
+                total *
+                100
+            );
+
+        let emo;
+        let title;
+        let grade;
+
+        if (pct === 100) {
+
+            emo = "🏆";
+            title = "Идеально!";
+            grade =
+                "Все ответы верны. Так держать!";
+
+        } else if (pct >= 85) {
+
+            emo = "🎉";
+            title = "Отлично!";
+            grade =
+                "Тема освоена очень хорошо.";
+
+        } else if (pct >= 70) {
+
+            emo = "👍";
+            title = "Хорошо";
+            grade =
+                "Крепкий результат, но есть что подтянуть.";
+
+        } else if (pct >= 50) {
+
+            emo = "📚";
+            title = "Неплохо";
+            grade =
+                "Стоит повторить теорию и пройти ещё раз.";
+
+        } else {
+
+            emo = "💪";
+            title = "Есть над чем поработать";
+            grade =
+                "Загляни в theory.md и попробуй снова.";
+        }
+
+
+        $("resEmo").textContent =
+            emo;
+
+        $("resTitle").textContent =
+            title;
+
+        $("resGrade").textContent =
+            grade;
+
+        $("sOk").textContent =
+            s.ok;
+
+        $("sBad").textContent =
+            s.bad;
+
+        $("sPct").textContent =
+            pct + "%";
+
+        $("reviewBtn").classList.toggle(
+            "hidden",
+            s.bad === 0
+        );
+
+        show("results");
+    }
+
+
+    $("retryBtn").addEventListener(
+        "click",
+        () => {
+
+            startQuiz(
+                session.title,
+                shuffle(
+                    session.questions.slice()
+                ),
+                session.showTopic
+            );
+        }
+    );
+
+
+    $("reviewBtn").addEventListener(
+        "click",
+        () => {
+
+            screens.results.classList.add(
+                "hidden"
+            );
+
+            screens.quiz.classList.remove(
+                "hidden"
+            );
+
+            const first =
+                document.querySelector(
+                    ".card .exp.no"
+                );
+
+            if (first) {
+
+                first.scrollIntoView({
+                    behavior:"smooth",
+                    block:"center"
+                });
+
+            } else {
+
+                window.scrollTo({
+                    top:0,
+                    behavior:"smooth"
+                });
+            }
+        }
+    );
+
+
+    $("menuBtn").addEventListener(
+        "click",
+        () => show("menu")
+    );
+
+
+    /* ============================================================
+       INIT
+       ============================================================ */
+
+    buildMenu();
+
+</script>
+
+</body>
+</html>

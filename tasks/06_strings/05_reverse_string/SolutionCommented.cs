@@ -1,0 +1,14 @@
+using System;
+
+class Program
+{
+    static void Main()
+    {
+        string line = Console.ReadLine();
+
+        // Reverse работает с массивом, поэтому строка копируется в char[].
+        char[] chars = line.ToCharArray();
+        Array.Reverse(chars);
+        Console.WriteLine(new string(chars));
+    }
+}

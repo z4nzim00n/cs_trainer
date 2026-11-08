@@ -1,0 +1,14 @@
+using System;
+
+class Program
+{
+    static void Main()
+    {
+        string[] parts = Console.ReadLine().Split(' ');
+        int a = int.Parse(parts[0]);
+        int b = int.Parse(parts[1]);
+
+        // TODO: поменяй значения местами и выведи их через пробел
+        Console.WriteLine("TODO");
+    }
+}
